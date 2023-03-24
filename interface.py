@@ -25,6 +25,30 @@ def draw_text(text, font, text_color, coords):
     screen.blit(text, textRect)
 
 
+class MenuPointer():
+    current_position = (X // 2.5, Y // 2)
+    buttons_available = []
+    where = "UP"
+
+    def show(self):
+        draw_text(
+            '>>>',
+            pygame.font.Font('freesansbold.ttf', 30),
+            Palette.red,
+            self.current_position
+        )
+
+    def move_pointer(self, where):
+        if where == 'UP':
+            self.current_position = (X // 2.5, Y // 2)
+            self.where = "UP"
+            self.show()
+        elif where == 'DOWN':
+            self.current_position = (X // 2.5, Y // 1.5)
+            self.where = "DOWN"
+            self.show()
+
+
 class Menus():
     font_logo = pygame.font.Font('freesansbold.ttf', 70)
     font_buttons = pygame.font.Font('freesansbold.ttf', 35)

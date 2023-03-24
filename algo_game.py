@@ -1,11 +1,12 @@
 import pygame
-from game_interface import Menus
+from interface import Menus, MenuPointer
 from settings import screen, clock
 
 # pygame setup
 
 pygame.init()
 menu = Menus()
+pointer = MenuPointer()
 running = True
 dt = 0
 
@@ -21,12 +22,18 @@ while running:
     screen.fill("white")
 
     menu.show_main()
+    pointer.show()
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        ...
+        pointer.move_pointer('UP')
     if keys[pygame.K_s]:
-        ...
+        pointer.move_pointer('DOWN')
+    if keys[pygame.K_RETURN]:
+        if pointer.where == "UP":
+            pass
+        else:
+            running = False
 
     # flip() the display to put your work on screen
     pygame.display.flip()
