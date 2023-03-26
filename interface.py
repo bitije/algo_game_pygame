@@ -5,11 +5,13 @@ from settings import Palette, screen
 pygame.init()
 X = screen.get_width()
 Y = screen.get_height()
+font_base = pygame.font.Font('freesansbold.ttf', 35)
+font_base_small = pygame.font.Font('freesansbold.ttf', 20)
 
 
 def draw_text(
         text='your text',
-        font=pygame.font.Font('freesansbold.ttf', 35),
+        font=font_base,
         text_color=Palette.green,
         coords=(X // 2, Y // 2)
         ):
@@ -40,13 +42,29 @@ class MainMenu():
     buttons = [
         ['Start',  (X // 2, Y // 2)],
         ['Quit', (X // 2, Y // 1.5)],
-        # ['zxc', (X // 2, Y // 3)]
     ]
 
-    def show(self):
-        # set the pygame window name
-        pygame.display.set_caption('Main menu')
+    @staticmethod
+    def use_main_menu(pointer):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            pygame.time.delay(100)
+            pointer.move_pointer('UP')
 
+        elif keys[pygame.K_s]:
+            pygame.time.delay(100)
+            pointer.move_pointer('DOWN')
+
+        if keys[pygame.K_SPACE]:
+            selected = pointer.buttons_available[pointer.current_position][0]
+            if selected == "Start":
+                pygame.time.delay(200)
+                return 1
+            elif selected == "Quit":
+                return -1
+        return 0
+
+    def show(self):
         # Draw logo
         draw_text(
             'Algo game',
@@ -89,5 +107,28 @@ class MenuPointer():
                 self.current_position = 0
 
 
-if __name__ != "__main__":
-    pointer = MenuPointer()
+class GameOverScreen():
+    @staticmethod
+    def show():
+        start_time = int(pygame.time.get_ticks() / 1000)
+        screen.fill('black')
+        draw_text('Game over!')
+        draw_text('Press any button to try again.', coords=(X // 2, Y // 1.5))
+        draw_text('ESC to leave',
+                  font=pygame.font.Font('freesansbold.ttf', 20),
+                  coords=(X//2, Y/1.2))
+        pygame.display.flip()
+        pygame.time.wait(500)
+        return start_time
+
+
+class Etc():
+    @staticmethod
+    def display_score(start_time, destination):
+        current_time = destination - int(pygame.time.get_ticks() / 1000)
+        if start_time != 0:
+            current_time += start_time
+        score_surf = font_base.render(f'{current_time}', True, Palette.white)
+        score_rect = score_surf.get_rect(center=(X//2, Y//4))
+        screen.blit(score_surf, score_rect)
+        return current_time

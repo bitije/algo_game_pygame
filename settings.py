@@ -6,7 +6,12 @@ import pygame
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 screen = pygame.display.set_mode((800, 600))
+X = screen.get_width()
+Y = screen.get_height()
 clock = pygame.time.Clock()
+pygame.display.set_caption('Algo game')
+Icon = pygame.image.load('imgs/icon.png')
+pygame.display.set_icon(Icon)
 
 
 @dataclass
