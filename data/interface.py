@@ -1,5 +1,5 @@
 import pygame
-from settings import Palette, screen
+from data.settings import Palette, screen
 
 
 pygame.init()

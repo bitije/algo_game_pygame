@@ -1,8 +1,8 @@
 import pygame
-from interface import MainMenu, MenuPointer, draw_text, GameOverScreen
-from settings import screen, clock
+from data.interface import MainMenu, MenuPointer, draw_text, GameOverScreen
+from data.settings import screen, clock
 from random import choice
-from levels.level_1 import LevelOne
+from data.levels.level_1 import LevelOne
 
 
 pygame.init()
