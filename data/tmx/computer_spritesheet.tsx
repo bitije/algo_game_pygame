@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.10" tiledversion="1.10.0" name="computer_spritesheet" tilewidth="16" tileheight="16" tilecount="2" columns="2">
- <image source="../../../../Users/gloth/Desktop/sci-fi-facility-asset-pack/computer_spritesheet.png" width="32" height="16"/>
+ <image source="../imgs/assets/computer_spritesheet.png" width="32" height="16"/>
 </tileset>
