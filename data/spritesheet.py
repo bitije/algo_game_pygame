@@ -1,7 +1,24 @@
 import pygame
-from data.settings import Palette
+from data.settings import Palette, TILE_SIZE
 
 pygame.init()
+
+
+def get_frames(path, rows, columns, scale=None):
+    """
+    Get frames from sprite sheet and returns them in list like:
+    [
+    [(jump_frame_1), (jump_frame_2), ...],
+    [(fall_frame_1), (fall_frame 2), ...],
+    ...
+    ]
+    """
+    t_size = TILE_SIZE
+    coords = [
+        (j * t_size, i * t_size, t_size, t_size) for i in range(columns)
+        for j in range(rows)
+    ]
+    return SpriteSheet(path).images_at(coords, scale, colorkey=Palette.blue)
 
 
 class SpriteSheet(object):
@@ -9,13 +26,14 @@ class SpriteSheet(object):
         self.sheet = pygame.image.load(filename).convert_alpha()
 
     # Load a specific image from a specific rectangle
-    def image_at(self, rectangle, scale, colorkey=None):
+    def image_at(self, rectangle, scale=None, colorkey=None):
         "Loads image from x,y,x+offset,y+offset"
         rect = pygame.Rect(rectangle)
         image = pygame.Surface(rect.size).convert()
         image.fill(Palette.blue)
         image.blit(self.sheet, (0, 0), rect)
-        image = pygame.transform.scale(image, scale)
+        if scale is not None:
+            image = pygame.transform.scale(image, scale)
         if colorkey is not None:
             if colorkey == -1:
                 colorkey = image.get_at((0, 0))
@@ -23,7 +41,7 @@ class SpriteSheet(object):
         return image
 
     # Load a whole bunch of images and return them as a list
-    def images_at(self, rects, scale=1, colorkey=None):
+    def images_at(self, rects, scale=None, colorkey=None):
         "Loads multiple images, supply a list of coordinates"
         return [self.image_at(rect, scale, colorkey) for rect in rects]
 

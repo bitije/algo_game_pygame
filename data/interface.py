@@ -34,9 +34,6 @@ def draw_text(
 
 
 class MainMenu():
-    # Fonts for text
-    font_logo = pygame.font.Font('freesansbold.ttf', 70)
-    font_buttons = pygame.font.Font('freesansbold.ttf', 35)
 
     # Buttons in main menu
     buttons = [
@@ -44,8 +41,10 @@ class MainMenu():
         ['Quit', (X // 2, Y // 1.5)],
     ]
 
-    @staticmethod
-    def use_main_menu(pointer):
+    def use_main_menu(self, pointer):
+        screen.fill("black")
+        self.show()
+        pointer.show()
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             pygame.time.delay(100)
@@ -65,10 +64,11 @@ class MainMenu():
         return 0
 
     def show(self):
+
         # Draw logo
         draw_text(
             'Algo game',
-            self.font_logo,
+            font=pygame.font.Font('freesansbold.ttf', 70),
             coords=(X // 2, Y // 4)
             )
 
@@ -76,7 +76,6 @@ class MainMenu():
         for i in range(len(self.buttons)):
             draw_text(
                 self.buttons[i][0],
-                self.font_buttons,
                 coords=self.buttons[i][1]
             )
 
@@ -88,8 +87,7 @@ class MenuPointer():
     def show(self):
         draw_text(
             '>>',
-            pygame.font.Font('freesansbold.ttf', 30),
-            Palette.green,
+            coords=
             (self.buttons_available[self.current_position][1][0] - X // 12,
              self.buttons_available[self.current_position][1][1],)
         )
@@ -107,9 +105,21 @@ class MenuPointer():
                 self.current_position = 0
 
 
-class GameOverScreen():
+class Etc():
     @staticmethod
-    def show():
+    def display_score(start_time, destination):
+        " Works like timer (Start_time, Time_to_trigger) "
+        current_time = destination - int(pygame.time.get_ticks() / 1000)
+        if start_time != 0:
+            current_time += start_time
+        score_surf = font_base.render(f'{current_time}', True, Palette.white)
+        score_rect = score_surf.get_rect(center=(X//2, Y//4))
+        screen.blit(score_surf, score_rect)
+        return current_time
+
+    @staticmethod
+    def game_over():
+        " Game over screen method returns start_time"
         start_time = int(pygame.time.get_ticks() / 1000)
         screen.fill('black')
         draw_text('Game over!')
@@ -120,15 +130,3 @@ class GameOverScreen():
         pygame.display.flip()
         pygame.time.wait(500)
         return start_time
-
-
-class Etc():
-    @staticmethod
-    def display_score(start_time, destination):
-        current_time = destination - int(pygame.time.get_ticks() / 1000)
-        if start_time != 0:
-            current_time += start_time
-        score_surf = font_base.render(f'{current_time}', True, Palette.white)
-        score_rect = score_surf.get_rect(center=(X//2, Y//4))
-        screen.blit(score_surf, score_rect)
-        return current_time

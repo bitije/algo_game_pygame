@@ -19,8 +19,6 @@
    <wangtile tileid="13" wangid="1,0,0,0,0,0,0,0"/>
    <wangtile tileid="14" wangid="0,0,1,0,0,0,0,0"/>
    <wangtile tileid="15" wangid="1,0,0,0,1,0,1,0"/>
-   <wangtile tileid="16" wangid="1,0,1,0,1,0,0,0"/>
-   <wangtile tileid="17" wangid="1,0,0,0,1,0,1,0"/>
   </wangset>
  </wangsets>
 </tileset>

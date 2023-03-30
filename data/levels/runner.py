@@ -13,7 +13,7 @@ def collision_sprites(player_runner, bubble_group):
         return 1
 
 
-class LevelOne():
+class RunnerLevel():
     def __init__(self) -> None:
 
         path_to_inspector = 'data/imgs/assets/inspector_spritesheet.png'
@@ -156,4 +156,4 @@ class PlayerRunner(pygame.sprite.Sprite):
 
 
 if __name__ != '__main__':
-    level_one = LevelOne()
+    pass
