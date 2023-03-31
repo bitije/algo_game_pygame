@@ -13,14 +13,19 @@ pygame.init()
 menu = MainMenu()
 pointer = MenuPointer()
 runner = RunnerLevel()
+lobby = Lobby()
 
-current_stage = 0
+current_stage = 2
 running = True
 start_time = 0
 
 # Timer
 runner_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(runner_timer, 1000)
+
+# Delta time
+FPS_LOCK = 60
+dt = clock.tick(FPS_LOCK) / 1000
 
 while running:
     for event in pygame.event.get():
@@ -48,17 +53,17 @@ while running:
 
     # Runner mini game
     elif current_stage == 1:
-        current_stage = runner.show(start_time)
+        current_stage = runner.show(start_time, dt)
 
     # Lobby
     elif current_stage == 2:
-        Lobby().show()
+        lobby.show(dt)
 
     # Game over
     elif current_stage == -2:
         start_time = Etc().game_over()
 
-    clock.tick(60)
+    dt = clock.tick(FPS_LOCK) / 1000
 
     # Put work on screen
     pygame.display.flip()

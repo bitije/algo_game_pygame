@@ -4,7 +4,13 @@ import pygame
 
 # ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Size of tile
 TILE_SIZE = 16
+
+LAYERS = {
+    'floor': 0,
+    'main': 1,
+}
 
 # Screen set up
 screen = pygame.display.set_mode((800, 600))

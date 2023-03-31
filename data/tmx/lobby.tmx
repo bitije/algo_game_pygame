@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="90">
+<map version="1.10" tiledversion="1.10.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="96">
  <tileset firstgid="1" source="floor_walls.tsx"/>
  <tileset firstgid="21" source="doodads_spritesheet.tsx"/>
  <tileset firstgid="51" source="computer_spritesheet.tsx"/>
@@ -52,6 +52,11 @@
 5,4,4,4,4,4,4,4,4,4,4,4,4,8,4,4,4,8,4,4,4,4,4,4,4,4,4,4,4,6
 </data>
  </layer>
+ <objectgroup id="10" name="Player">
+  <object id="95" name="Start" x="248.5" y="275.5">
+   <point/>
+  </object>
+ </objectgroup>
  <layer id="3" name="Etc" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,0,0,0,30,0,0,0,0,
@@ -161,7 +166,6 @@
   <object id="89" x="176.435" y="16.0109" width="16.1304" height="19.4783"/>
  </objectgroup>
  <objectgroup id="8" name="Terminals">
-  <object id="14" x="136.5" y="-24"/>
   <object id="68" x="306.938" y="166.625" width="11.0625" height="12"/>
   <object id="72" x="370.969" y="166.875" width="11.0625" height="12"/>
   <object id="73" x="434.969" y="166.625" width="11.0625" height="12"/>

@@ -31,14 +31,10 @@ class RunnerLevel():
             (32, 48, 16, 16),
             (48, 48, 16, 16)
             ]
-        coords_alien = [
-            (0, 0, 16, 16),
-            (16, 0, 16, 16),
-            (32, 0, 16, 16)
-        ]
+        coords_alien = (32, 0, 16, 16)
 
         frames_player = inspector.images_at(coords_inspector, (50, 150), Palette.blue)
-        self.frames_alien = alien.images_at(coords_alien, (50, 50), Palette.blue)
+        self.frame_alien = alien.image_at(coords_alien, (50, 50), Palette.blue)
         self.frame_junk = junk.image_at(coords_junk, (80, 80), Palette.blue)
 
         self.player_runner = pygame.sprite.GroupSingle()
@@ -50,15 +46,15 @@ class RunnerLevel():
         self.sky_surf = pygame.Surface((X, Y - 100)).convert()
         self.sky_surf.fill(Palette.grey_wall)
 
-    def show(self, start_time):
+    def show(self, start_time, dt):
         screen.blit(self.ground_surf, (0, Y - 100))
         screen.blit(self.sky_surf, (0, 0))
 
         self.player_runner.draw(screen)
-        self.player_runner.update()
+        self.player_runner.update(dt)
 
         self.bubble_group.draw(screen)
-        self.bubble_group.update()
+        self.bubble_group.update(dt)
 
         total_score = Etc().display_score(start_time, 30)
 
@@ -69,7 +65,7 @@ class RunnerLevel():
 
     def tick(self, entity):
         if entity == 'flying':
-            frames = self.frames_alien
+            frames = self.frame_alien
         else:
             frames = self.frame_junk
         self.bubble_group.add(BubbleEnemy(entity, frames))
@@ -82,22 +78,30 @@ class BubbleEnemy(pygame.sprite.Sprite):
         if type == 'flying':
             self.frames = frames
             self.player_index = 0
-            self.image = self.frames[self.player_index]
+            self.image = frames
             self.rect = self.image.get_rect(midbottom=(X + 100, Y - 200))
         else:
             self.image = frames
             self.rect = self.image.get_rect(midbottom=(X + 100, Y - 100))
 
-    def apply_animation(self):
-        if self.player_index >= len(self.frames) - 1:
-            self.player_index = 0
-        else:
-            self.player_index += 1
+        # Movemet attributes
+        self.direction_move = pygame.math.Vector2()
+        self.pos = pygame.math.Vector2(self.rect.center)
+        self.speed = 500
 
-        self.image = self.frames[int(self.player_index)]
+    def move(self, dt):
+        self.direction_move.x = -1
 
-    def update(self):
-        self.rect.x -= 10
+        # normalizing vector
+        if self.direction_move.magnitude() > 0:
+            self.direction_move = self.direction_move.normalize()
+
+        # horizontal vector
+        self.pos += self.direction_move * self.speed * dt
+        self.rect.center = self.pos
+
+    def update(self, dt):
+        self.move(dt)
         self.destroy()
 
     def destroy(self):
@@ -149,7 +153,7 @@ class PlayerRunner(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(self.image, (50, 150))
             self.rect = self.image.get_rect(midbottom=(60, Y - 100))
 
-    def update(self):
+    def update(self, dt):
         self.player_input()
         self.apply_gravity()
         self.apply_animation()
