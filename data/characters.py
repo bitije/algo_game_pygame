@@ -89,20 +89,18 @@ class Inspector(pygame.sprite.Sprite):
             self.anim_index = 2
             self.entity_movement = True
 
-    def apply_animation(self, dt):
+    def apply_animation(self):
         if self.entity_movement is True:
             if round(self.frame_index) >= 4:
                 self.frame_index = 0
             else:
-                self.frame_index += dt * 7
-        else:
-            self.frame_index = 0
+                self.frame_index += 0.2
         self.image = self.frames[int(self.frame_index) + self.anim_index * 4]
 
     def update(self, dt):
         self.player_input()
         self.move(dt)
-        self.apply_animation(dt)
+        self.apply_animation()
 
 
 if __name__ != '__main__':

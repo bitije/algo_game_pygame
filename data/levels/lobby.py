@@ -1,5 +1,5 @@
 from pytmx.util_pygame import load_pygame
-from data.settings import screen, TILE_SIZE, X, Y
+from data.settings import screen, TILE_SIZE, X, Y, Palette
 from data.characters import Inspector
 import pygame
 
@@ -27,7 +27,9 @@ class Lobby():
                 for x, y, surface in layer.tiles():
                     pos = (x * TILE_SIZE, y * TILE_SIZE)
                     add_to = [self.level_sprites]
-                    if ('Walls' or 'Computers') == getattr(layer, 'name'):
+                    if ('Walls') == getattr(layer, 'name'):
+                        add_to.append(self.collision_sprites)
+                    elif ('Computers') == getattr(layer, 'name'):
                         add_to.append(self.collision_sprites)
                     Tile(pos, surface, add_to)
         for obj in lobby_map.get_layer_by_name('Player'):
@@ -36,7 +38,6 @@ class Lobby():
 
     def show(self, dt):
         screen.fill('green')
-        # self.level_sprites.draw(screen)
         self.level_sprites.custom_draw(self.player)
         self.level_sprites.update(dt)
 
@@ -47,7 +48,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = surf
         self.rect = self.image.get_rect(topleft=pos)
         infl_w = self.rect.width * 0.2
-        infl_h = self.rect.height * 0.5
+        infl_h = self.rect.height * 0.2
         self.hitbox = self.rect.copy().inflate(infl_w, infl_h)
 
 
@@ -55,15 +56,19 @@ class CameraGroup(pygame.sprite.Group):
     def __init__(self) -> None:
         super().__init__()
         self.display_surface = pygame.display.get_surface()
+        self.fake_screen = pygame.Surface((240, 160))
         self.offset = pygame.math.Vector2()
+        # self.scale_display = self.display_surface.
 
     def custom_draw(self, player):
-        self.offset.x = player.rect.centerx - X / 2
-        self.offset.y = player.rect.centery - Y / 2
+        self.offset.x = player.rect.centerx - (X-666)
+        self.offset.y = player.rect.centery - (Y-520)
+        self.fake_screen.fill(Palette.grey_floor)
         for sprite in self.sprites():
             offset_rect = sprite.rect.copy()
             offset_rect.center -= self.offset
-            self.display_surface.blit(sprite.image, offset_rect)
+            self.fake_screen.blit(sprite.image, offset_rect)
+        self.display_surface.blit(pygame.transform.scale(self.fake_screen, (X, Y)), (0, 0))
 
 
 if __name__ != '__main__':

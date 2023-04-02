@@ -56,7 +56,7 @@ class RunnerLevel():
         self.bubble_group.draw(screen)
         self.bubble_group.update(dt)
 
-        total_score = Etc().display_score(start_time, 30)
+        total_score = Etc().display_score(start_time, 15)
 
         if total_score == 0:
             return 2
@@ -79,6 +79,7 @@ class BubbleEnemy(pygame.sprite.Sprite):
             self.frames = frames
             self.player_index = 0
             self.image = frames
+            self.image = pygame.transform.scale(self.image, (70,70))
             self.rect = self.image.get_rect(midbottom=(X + 100, Y - 200))
         else:
             self.image = frames
