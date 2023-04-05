@@ -22,7 +22,7 @@ class Inspector(pygame.sprite.Sprite):
         # Movement attributes
         self.direction_move = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
-        self.speed = 50
+        self.speed = 70
 
         # Collision attributes
         self.collision_sprites = collision_sprites

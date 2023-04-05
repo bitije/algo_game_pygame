@@ -6,6 +6,7 @@ from data.settings import clock
 from data.interface import MainMenu, MenuPointer, Etc
 from data.levels.runner import RunnerLevel
 from data.levels.lobby import Lobby
+from data.algorithms import buble_sort
 
 
 pygame.init()
@@ -15,7 +16,7 @@ pointer = MenuPointer()
 runner = RunnerLevel()
 lobby = Lobby()
 
-current_stage = 2
+current_stage = 3
 running = True
 start_time = 0
 
@@ -48,8 +49,6 @@ while running:
     if current_stage == 0:
         clock.tick(15)
         current_stage = menu.use_main_menu(pointer)
-        if current_stage == 1:
-            start_time = int(pygame.time.get_ticks() / 1000)
 
     # Runner mini game
     elif current_stage == 1:
@@ -57,11 +56,27 @@ while running:
 
     # Lobby
     elif current_stage == 2:
-        lobby.show(dt)
+        current_stage = lobby.show(dt)
+        if current_stage == 1:
+            start_time = int(pygame.time.get_ticks() / 1000)
+
+    # Algorithms
+    elif current_stage >= 3:
+        algo_levels = [
+            buble_sort.start_bubblesort(),
+            1, -228
+        ]
+        current_stage = algo_levels[current_stage - 3]
+        if current_stage == 1:
+            start_time = int(pygame.time.get_ticks() / 1000)
 
     # Game over
     elif current_stage == -2:
         start_time = Etc().game_over()
+
+    # Not done screen
+    elif current_stage == -228:
+        current_stage = Etc().not_done()
 
     dt = clock.tick(FPS_LOCK) / 1000
 

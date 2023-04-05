@@ -58,7 +58,7 @@ class MainMenu():
             selected = pointer.buttons_available[pointer.current_position][0]
             if selected == "Start":
                 pygame.time.delay(200)
-                return 1
+                return 2
             elif selected == "Quit":
                 return -1
         return 0
@@ -130,3 +130,11 @@ class Etc():
         pygame.display.flip()
         pygame.time.wait(500)
         return start_time
+
+    @staticmethod
+    def not_done():
+        screen.fill('black')
+        draw_text('Next stage is not done!')
+        pygame.display.flip()
+        pygame.time.wait(3000)
+        return 0
