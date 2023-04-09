@@ -56,7 +56,7 @@ class RunnerLevel():
         self.bubble_group.draw(screen)
         self.bubble_group.update(dt)
 
-        total_score = Etc().display_score(start_time, 5)
+        total_score = Etc().display_score(start_time, 30)
 
         if total_score == 0:
             return 2

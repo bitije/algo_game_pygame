@@ -6,7 +6,7 @@ from data.settings import clock
 from data.interface import MainMenu, MenuPointer, Etc
 from data.levels.runner import RunnerLevel
 from data.levels.lobby import Lobby
-from data.algorithms import buble_sort
+from data.algorithms import bubble_sort
 
 
 pygame.init()
@@ -28,6 +28,8 @@ pygame.time.set_timer(runner_timer, 1000)
 FPS_LOCK = 60
 dt = clock.tick(FPS_LOCK) / 1000
 
+debug_next = False
+
 while running:
     for event in pygame.event.get():
         # pygame.QUIT event means the user clicked X to close your window
@@ -44,6 +46,13 @@ while running:
         # Every second generate enemy on runner
         if event.type == runner_timer and current_stage == 1:
             runner.tick(choice(['flying', 'sneaky', 'sneaky']))
+
+        elif current_stage >= 3:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    debug_next = True
+            else:
+                continue
 
     # Main Menu
     if current_stage == 0:
@@ -63,10 +72,11 @@ while running:
     # Algorithms
     elif current_stage >= 3:
         algo_levels = [
-            buble_sort.start_bubblesort(),
-            1, -228
+            # 1,
+            bubble_sort.start_bubblesort(debug_next), -228
         ]
         current_stage = algo_levels[current_stage - 3]
+        debug_next = False
         if current_stage == 1:
             start_time = int(pygame.time.get_ticks() / 1000)
 
