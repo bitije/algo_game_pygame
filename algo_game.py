@@ -6,7 +6,7 @@ from data.settings import clock
 from data.interface import MainMenu, MenuPointer, Etc
 from data.levels.runner import RunnerLevel
 from data.levels.lobby import Lobby
-from data.algorithms import bubble_sort, selection_sort
+from data.algorithms import bubble_sort, selection_sort, insertion_sort
 
 
 pygame.init()
@@ -77,6 +77,7 @@ while running:
         algo_levels = [
             bubble_sort.start_bubblesort,
             selection_sort.start_selectionsort,
+            insertion_sort.start_insertionsort,
         ]
         current_stage = algo_levels[current_stage-3](debug_next, current_stage)
         debug_next = False

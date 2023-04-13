@@ -136,7 +136,7 @@ class BubbleSort():
                     self.exit_flag = True
 
             # If there is nothing to swap then sorting is done
-            elif player_input is True:
+            elif player_input is True and self.exit_flag is True:
                 if not self.swapped:
                     return True
 
@@ -153,22 +153,32 @@ class BubbleSort():
         draw_text('Bubble sort', coords=(X//2, 50))
         synopsis = 'Bubble Sort is the simplest sorting algorithm that works'
         synopsis2 = 'by repeatedly swapping the adjacent elements if they are in the wrong order.'
-        controls = '"Space" button to sort  ||  "R" to generate random array'
+        controls = '"Space" button to sort'
         draw_text(synopsis, font=font_base_small)
         draw_text(synopsis2, font=font_base_small, coords=(X // 2, Y // 2 + 20))
         draw_text(controls, font=font_base_small, coords=(X//2, Y - 50))
-        explanation = '1. Traverse through all array elements.'
-        explanation2 = '2. Swap if the element found is greater than the next element.'
+        explanation = 'do'
+        explanation2 = 'swapped = false'
+        explanation3 = 'for i = 1 to indexOfLastUnsortedElement-1'
+        explanation4 = 'if leftElement > rightElement'
+        explanation5 = 'swap(leftElement, rightElement)'
+        explanation6 = 'swapped = true; ++swapCounter'
+        explanation7 = 'while swapped'
         draw_text('Algorithm:', font=font_base_small, coords=(X//2, Y//2+60))
-        draw_text(explanation, font=font_base_small, coords=(X//2, Y//2+80))
-        draw_text(explanation2, font=font_base_small, coords=(X//2, Y//2+100))
+        draw_text(explanation, font=font_base_small, coords=(X//2-150, Y//2+80))
+        draw_text(explanation2, font=font_base_small, coords=(X//2-100, Y//2+100))
+        draw_text(explanation3, font=font_base_small, coords=(X//2-10, Y//2+120))
+        draw_text(explanation4, font=font_base_small, coords=(X//2, Y//2+140))
+        draw_text(explanation5, font=font_base_small, coords=(X//2+50, Y//2+160))
+        draw_text(explanation6, font=font_base_small, coords=(X//2+50, Y//2+180))
+        draw_text(explanation7, font=font_base_small, coords=(X//2-100, Y//2+200))
 
     def show_end_screen(self, player_input):
         """ End screen shows that sorting is done"""
 
         screen.fill('black')
-        draw_text('Sorting is done')
-
+        self.show_text()
+        draw_text('Sorting is done', coords=(X//2, Y//2-100))
         # If user hit space end function
         if player_input:
             return True
@@ -200,10 +210,8 @@ def start_bubblesort(player_input, current_stage):
 
     # If bubble sort is done then leave to lobby
     if res is True:
-        print('bubble done')
         return 2
 
     # Else begin this stage again
     else:
-        print('again', current_stage)
         return current_stage

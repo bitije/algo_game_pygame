@@ -37,7 +37,7 @@ class ArrElement(pygame.sprite.Sprite):
         screen.blit(textSurf, (self.pos[0]-10, self.pos[1]-20))
 
 
-class SelectionSort():
+class InsertionSort():
     """ Algorithm class """
 
     def __init__(self, elements) -> None:
@@ -73,46 +73,46 @@ class SelectionSort():
         for n in range(len(self.elements)-1, -1, -1):
             self.arr_elements.sprites()[n].color()
 
-    def selectionsort(self, player_input):
-        """ Selection sort """
-        for ind in range(self.outer_flag, len(self.elements)):
+    def insertionsort(self, player_input):
+        """ Insertion sort """
+        # Traverse through 1 to len(arr)
+        for i in range(self.outer_flag, len(self.elements)):
+            self.arr_elements.sprites()[i].color(Palette.pale_green)
             if player_input is True and self.exit_flag is False:
-                self.arr_elements.sprites()[ind].color(Palette.yellow_green)
-                min_index = ind
-                for j in range(ind + 1 + self.inner_flag, len(self.elements)):
-                    if player_input is False:
-                        return
-                    player_input = False
+                key = self.elements[i]
+                # Move elements of arr[0..i-1], that are
+                # greater than key, to one position ahead
+                # of their current position
+                j = i-1-self.inner_flag
+
+                if player_input is False:
+                    return
+                player_input = False
+                print(f'i: {i} outer: {self.outer_flag}')
+                while j >= 0 and key < self.elements[j]:
+                    self.elements[j + 1] = self.elements[j]
+                    j -= 1
                     self.inner_flag += 1
-                    self.arr_elements.sprites()[j].color(Palette.pale_green)
-                    # select the minimum element in every iteration
-                    if self.elements[j] < self.elements[min_index]:
-                        min_index = j
+                self.elements[j + 1] = key
 
-                    # swapping the elements to sort the array
-                    (self.elements[ind], self.elements[min_index]) = (self.elements[min_index], self.elements[ind])
-                self.arr_elements.sprites()[ind].color(Palette.white)
                 self.outer_flag += 1
-                self.inner_flag = 0
                 self.create_arr(self.elements)
-
-                # Color fully sorted part
-                for j in range(self.outer_flag):
-                    self.arr_elements.sprites()[j].color(Palette.green)
+            self.inner_flag = 0
 
         if self.outer_flag == len(self.elements):
+            print('exit flag')
             self.exit_flag = True
 
-        if player_input is True and self.exit_flag is True:
-            return True
+        if player_input is True:
+            return self.exit_flag
 
         else:
-            return
+            return self.exit_flag
 
     def show_text(self):
         """ Show explanation text about bubble sort"""
 
-        draw_text('Selection sort', coords=(X//2, 50))
+        draw_text('Insertion sort', coords=(X//2, 50))
         synopsis = 'The selection sort algorithm sorts an array by repeatedly finding the'
         synopsis2 = 'minimum element from unsorted part and putting it at the beginning.'
         controls = '"Space" button to sort'
@@ -156,15 +156,15 @@ class SelectionSort():
         else:
             screen.fill('black')
             self.show_arr()
-            self.sort_res = self.selectionsort(player_input)
+            self.sort_res = self.insertionsort(player_input)
             self.show_text()
 
 
 array_to_demo = [20, 3, 63, 70, 50, 10, 2, 47]
-bs = SelectionSort(array_to_demo)
+bs = InsertionSort(array_to_demo)
 
 
-def start_selectionsort(player_input, current_stage):
+def start_insertionsort(player_input, current_stage):
     """ Start bubble sort explanation """
 
     res = bs.show(player_input)

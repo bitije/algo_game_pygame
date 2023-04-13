@@ -62,7 +62,6 @@ class Lobby():
         self.level_sprites.update(dt)
         trigger = self.player_location()
         if trigger is not None:
-            print(f'trigger:{trigger}')
             return trigger
         else:
             return 2
