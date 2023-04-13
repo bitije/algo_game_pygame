@@ -1,4 +1,5 @@
-from data.settings import screen, Palette
+from data.settings import screen, Palette, X, Y
+from data.interface import draw_text, font_base_small
 import pygame
 
 
@@ -6,6 +7,8 @@ pygame.init()
 
 
 class ArrElement(pygame.sprite.Sprite):
+    """ Sprite of array element """
+
     def __init__(self, pos, element, group) -> None:
         super().__init__()
         self.pos = pos
@@ -15,9 +18,13 @@ class ArrElement(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom=pos)
         self.add(group)
 
-    def colour_it(self, color=None):
+    def color(self, color=None):
+        """ Fill sprite with color text etc """
+
+        # If color is not defined dont change it
         if color is not None:
             self.image.fill(color)
+
         # Text attributes
         font = pygame.font.Font('freesansbold.ttf', 20)
         textSurf = font.render(f'{self.element}', 1, Palette.black)
@@ -25,107 +32,178 @@ class ArrElement(pygame.sprite.Sprite):
 
 
 class BubbleSort():
+    """ Algorithm class """
+
     def __init__(self, elements) -> None:
-        self.slide_num = 5
-        self.keydown = 0
         self.elements = elements
-        print(elements)
-        self.inner_flag = 0
-        self.outer_flag = 0
+        self.sort_res = False
+        self.reset()
         self.create_arr(self.elements)
 
+    def reset(self):
+        """ Reset all flags """
+        self.inner_flag = 0
+        self.outer_flag = 0
+        self.swapped = False
+        self.exit_flag = False
+
     def create_arr(self, elements):
-        # Append elements in arr_elements
+        """ Create sprites from array """
+
         self.arr_elements = pygame.sprite.OrderedUpdates()
+
+        # Create sprite for every array element and add it to group
         for element in range(len(elements)):
             x, y = 50 + 50 * element, 250
-            ArrElement((x, y), elements[element], self.arr_elements)
+            ArrElement((x+150, y), elements[element], self.arr_elements)
+
+        # Fill sprites with content
         for n in range(len(self.elements)-1, -1, -1):
-            self.arr_elements.sprites()[n].colour_it()
+            self.arr_elements.sprites()[n].color()
 
     def show_arr(self):
         """Draw every arr element and fill it"""
         self.arr_elements.draw(screen)
         for n in range(len(self.elements)-1, -1, -1):
-            self.arr_elements.sprites()[n].colour_it()
+            self.arr_elements.sprites()[n].color()
 
-    def bubblesort(self):
-        swapped = False
-        # Looping from size of array from last index[-1] to index [0]
-        for n in range(len(self.elements)-1, 0, -1):
-            for i in range(n - self.inner_flag):
-                self.arr_elements.sprites()[i].colour_it(Palette.green)  # Change color
-                self.arr_elements.sprites()[i+1].colour_it(Palette.green)  # Change color
-                if self.elements[i] > self.elements[i + 1]:
-                    swapped = True
-                    # swapping data if the element
-                    # is less than next element in the array
-                    self.elements[i], self.elements[i + 1] = self.elements[i + 1], self.elements[i]
-            if not swapped:
-                # exiting the function if we didn't make a single swap
-                # meaning that the array is already sorted.
-                return
-        # After sorting is done create sorted array
-        self.create_arr(self.elements)
+    def bubblesort(self, player_input):
+        """ Bubble sort """
 
-    def bubblesort_prototype(self, player_input):
-        swapped = False
-        # Looping from size of array from last index[-1] to index [0]
-        for n in range(len(self.elements)-1 - self.outer_flag, 0, -1):
-            self.arr_elements.sprites()[n].colour_it(Palette.red)  # Change color
-            if player_input is True:
-                n += self.outer_flag
+        # Highlight first pair of elements
+        if self.inner_flag == 0:
+            self.arr_elements.sprites()[0].color(Palette.yellow_green)
+            self.arr_elements.sprites()[1].color(Palette.pale_green)
+
+        # Classic bubble sort
+        for n in range(len(self.elements) - (1 + self.outer_flag), -1, -1):
+
+            # If user hit space and sorting is not done show current step
+            if player_input is True and self.exit_flag is False:
                 for i in range(n - self.inner_flag):
+
+                    # After loop iteration we break it until user input
                     if player_input is False:
                         self.inner_flag += 1
                         return
-                    print(n, n-self.inner_flag, i)
-                    i += self.inner_flag
+
+                    # Toggle input flag, because user need to activate every
+                    # loop iteration by himself
                     player_input = False
-                    self.arr_elements.sprites()[i].colour_it(Palette.green)  # Change color
-                    # self.arr_elements.sprites()[i+1].colour_it(Palette.green)  # Change color
+
+                    # If the user did not press the space button, the function
+                    # closes and the next time the cycle starts from the
+                    # beginning, then we need to indicate where user stopped
+                    # last time, flags are used for this
+                    n += self.outer_flag
+                    i += self.inner_flag
+
+                    # Compare elements
                     if self.elements[i] > self.elements[i + 1]:
-                        self.arr_elements.sprites()[i+1].colour_it(Palette.blue)  # Change color
-                        swapped = True
-                        # swapping data if the element
-                        # is less than next element in the array
+                        self.swapped = True
                         self.elements[i], self.elements[i + 1] = self.elements[i + 1], self.elements[i]
+
+                    # Create array after sort operation
+                    self.create_arr(self.elements)
+
+                    # Remove selection on first elements
+                    if self.inner_flag != 0:
+                        self.arr_elements.sprites()[0].color(Palette.white)
+                        self.arr_elements.sprites()[1].color(Palette.white)
+
+                    # Clear less element from prev iteration
+                    self.arr_elements.sprites()[i-1].color(Palette.white)
+
+                    # Greater element
+                    self.arr_elements.sprites()[i+1].color(Palette.yellow_green)
+
+                    # Compared element
+                    if n - self.inner_flag != 1:
+                        self.arr_elements.sprites()[i+2].color(Palette.pale_green)
+
+                    # Color fully sorted part
+                    for j in range(self.outer_flag):
+                        self.arr_elements.sprites()[-j-1].color(Palette.green)
+
+                # Flags for loop
                 self.inner_flag = 0
                 self.outer_flag += 1
-                if not swapped:
-                    # exiting the function if we didn't make a single swap
-                    # meaning that the array is already sorted.
-                    return
-            if player_input is False:
+
+                # Sorting is done
+                if n == 0:
+                    self.swapped = False
+                    player_input = False
+                    self.exit_flag = True
+
+            # If there is nothing to swap then sorting is done
+            elif player_input is True:
+                if not self.swapped:
+                    return True
+
+            # Exit function until user input
+            elif player_input is False:
                 return
-            # After sorting is done create sorted array
-            self.create_arr(self.elements)
+
+        # Reset outer flag when loop is done
         self.outer_flag = 0
 
-    def next_slide(self):
-        keys = pygame.key.get_pressed()
-        if not keys[pygame.K_SPACE]:
-            self.keydown = 0
+    def show_text(self):
+        """ Show explanation text about bubble sort"""
+
+        draw_text('Bubble sort', coords=(X//2, 50))
+        synopsis = 'Bubble Sort is the simplest sorting algorithm that works'
+        synopsis2 = 'by repeatedly swapping the adjacent elements if they are in the wrong order.'
+        controls = '"Space" button to sort  ||  "R" to generate random array'
+        draw_text(synopsis, font=font_base_small)
+        draw_text(synopsis2, font=font_base_small, coords=(X // 2, Y // 2 + 20))
+        draw_text(controls, font=font_base_small, coords=(X//2, Y - 50))
+        explanation = '1. Traverse through all array elements.'
+        explanation2 = '2. Swap if the element found is greater than the next element.'
+        draw_text('Algorithm:', font=font_base_small, coords=(X//2, Y//2+60))
+        draw_text(explanation, font=font_base_small, coords=(X//2, Y//2+80))
+        draw_text(explanation2, font=font_base_small, coords=(X//2, Y//2+100))
+
+    def show_end_screen(self, player_input):
+        """ End screen shows that sorting is done"""
+
+        screen.fill('black')
+        draw_text('Sorting is done')
+
+        # If user hit space end function
+        if player_input:
             return True
-        elif keys[pygame.K_SPACE] and self.keydown == 0:
-            # self.slide_num -= 1
-            self.keydown = 1
-            return False
 
     def show(self, player_input):
-        screen.fill('black')
-        self.show_arr()
-        self.bubblesort()
-        # self.bubblesort_prototype(player_input)
+        """ Show bubble sort if its not done else show end screen"""
+
+        # If sorting is done show end screen
+        if self.sort_res is True:
+            if self.show_end_screen(player_input) is True:
+                return True
+
+        # Else continue sorting
+        else:
+            screen.fill('black')
+            self.show_arr()
+            self.sort_res = self.bubblesort(player_input)
+            self.show_text()
 
 
-array_to_demo = [1, 99, 85, 72, 10, 2, 28]
+array_to_demo = [20, 3, 63, 70, 50, 10, 2, 47]
 bs = BubbleSort(array_to_demo)
 
 
-def start_bubblesort(player_input):
-    bs.show(player_input)
-    if bs.slide_num == 0:
+def start_bubblesort(player_input, current_stage):
+    """ Start bubble sort explanation """
+
+    res = bs.show(player_input)
+
+    # If bubble sort is done then leave to lobby
+    if res is True:
+        print('bubble done')
         return 2
+
+    # Else begin this stage again
     else:
-        return 3
+        print('again', current_stage)
+        return current_stage

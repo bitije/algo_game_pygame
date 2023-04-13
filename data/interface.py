@@ -6,7 +6,7 @@ pygame.init()
 X = screen.get_width()
 Y = screen.get_height()
 font_base = pygame.font.Font('freesansbold.ttf', 35)
-font_base_small = pygame.font.Font('freesansbold.ttf', 20)
+font_base_small = pygame.font.Font('freesansbold.ttf', 15)
 
 
 def draw_text(

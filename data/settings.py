@@ -35,5 +35,7 @@ class Palette():
     blue = (0, 0, 128)
     black = (0, 0, 0)
     green = (127, 255, 0)
+    pale_green = (152, 251, 152)
+    yellow_green = (154, 205, 50)
     grey_wall = (77, 85, 89)
     grey_floor = (155, 173, 183)

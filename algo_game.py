@@ -6,7 +6,7 @@ from data.settings import clock
 from data.interface import MainMenu, MenuPointer, Etc
 from data.levels.runner import RunnerLevel
 from data.levels.lobby import Lobby
-from data.algorithms import bubble_sort
+from data.algorithms import bubble_sort, selection_sort
 
 
 pygame.init()
@@ -16,7 +16,7 @@ pointer = MenuPointer()
 runner = RunnerLevel()
 lobby = Lobby()
 
-current_stage = 3
+current_stage = 0
 running = True
 start_time = 0
 
@@ -28,7 +28,9 @@ pygame.time.set_timer(runner_timer, 1000)
 FPS_LOCK = 60
 dt = clock.tick(FPS_LOCK) / 1000
 
+# Debug flag for algo explanation
 debug_next = False
+
 
 while running:
     for event in pygame.event.get():
@@ -47,6 +49,7 @@ while running:
         if event.type == runner_timer and current_stage == 1:
             runner.tick(choice(['flying', 'sneaky', 'sneaky']))
 
+        # If space is down then show the next slide
         elif current_stage >= 3:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
@@ -72,10 +75,10 @@ while running:
     # Algorithms
     elif current_stage >= 3:
         algo_levels = [
-            # 1,
-            bubble_sort.start_bubblesort(debug_next), -228
+            bubble_sort.start_bubblesort,
+            selection_sort.start_selectionsort,
         ]
-        current_stage = algo_levels[current_stage - 3]
+        current_stage = algo_levels[current_stage-3](debug_next, current_stage)
         debug_next = False
         if current_stage == 1:
             start_time = int(pygame.time.get_ticks() / 1000)
@@ -83,10 +86,6 @@ while running:
     # Game over
     elif current_stage == -2:
         start_time = Etc().game_over()
-
-    # Not done screen
-    elif current_stage == -228:
-        current_stage = Etc().not_done()
 
     dt = clock.tick(FPS_LOCK) / 1000
 
